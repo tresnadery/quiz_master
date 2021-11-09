@@ -32,14 +32,14 @@ func (m *QuestionRepository) GetAll() ([]*domain.Question, error) {
 	return r0, r1
 }
 
-func (m *QuestionRepository) GetByNumber(number string) (*domain.Question, error) {
+func (m *QuestionRepository) GetByNumber(number string) (domain.Question, error) {
 	ret := m.Called(number)
 
-	var r0 *domain.Question
-	if rf, ok := ret.Get(0).(func(string) *domain.Question); ok {
+	var r0 domain.Question
+	if rf, ok := ret.Get(0).(func(string) domain.Question); ok {
 		r0 = rf(number)
 	} else {
-		r0 = ret.Get(0).(*domain.Question)
+		r0 = ret.Get(0).(domain.Question)
 	}
 
 	var r1 error
