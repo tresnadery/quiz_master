@@ -8,18 +8,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type QuestionRepository interface {
-	GetAll() ([]*domain.Question, error)
-	Store(question *domain.Question) error
-	GetByNumber(number string) (domain.Question, error)
-	Destroy(number string) error
-}
-
 type questionRepository struct {
 	conn *sql.DB
 }
 
-func NewQuestionRepository(conn *sql.DB) QuestionRepository {
+func NewQuestionRepository(conn *sql.DB) domain.QuestionRepository {
 	return &questionRepository{conn}
 }
 

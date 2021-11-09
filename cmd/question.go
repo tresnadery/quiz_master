@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 	"quiz_master/database"
+	"quiz_master/domain"
 	"quiz_master/helper"
 	"quiz_master/repository"
 	"quiz_master/usecase"
@@ -27,7 +28,7 @@ import (
 )
 
 // questionCmd represents the question command
-func NewQuestionCmd(u usecase.QuestionUsecase) *cobra.Command {
+func NewQuestionCmd(u domain.QuestionUsecase) *cobra.Command {
 	return &cobra.Command{
 		Use:   "question <number>",
 		Short: "This command is use to show detail question",
@@ -43,7 +44,7 @@ func NewQuestionCmd(u usecase.QuestionUsecase) *cobra.Command {
 	}
 }
 
-func NewAnswerQuestionCmd(u usecase.QuestionUsecase) *cobra.Command {
+func NewAnswerQuestionCmd(u domain.QuestionUsecase) *cobra.Command {
 	return &cobra.Command{
 		Use:   "answer_question <number> <answer>",
 		Short: "This command to answer the question",
@@ -59,7 +60,7 @@ func NewAnswerQuestionCmd(u usecase.QuestionUsecase) *cobra.Command {
 	}
 }
 
-func NewCreateQuestion(u usecase.QuestionUsecase) *cobra.Command {
+func NewCreateQuestion(u domain.QuestionUsecase) *cobra.Command {
 	return &cobra.Command{
 		Use:   "create_question <number> <question> <answer>",
 		Args:  cobra.ExactArgs(3),
@@ -75,7 +76,7 @@ func NewCreateQuestion(u usecase.QuestionUsecase) *cobra.Command {
 }
 
 // createQuestionCmd represents the createQuestion command
-func NewDeleteQuestionCmd(u usecase.QuestionUsecase) *cobra.Command {
+func NewDeleteQuestionCmd(u domain.QuestionUsecase) *cobra.Command {
 	return &cobra.Command{
 		Use:   "delete_question <number>",
 		Short: "This command is use to delete question",
@@ -90,7 +91,7 @@ func NewDeleteQuestionCmd(u usecase.QuestionUsecase) *cobra.Command {
 	}
 }
 
-func NewListQuestion(u usecase.QuestionUsecase) *cobra.Command {
+func NewListQuestion(u domain.QuestionUsecase) *cobra.Command {
 	return &cobra.Command{
 		Use:   "list_question",
 		Short: "This command is use to list question",

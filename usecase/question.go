@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"quiz_master/builder"
 	"quiz_master/domain"
-	"quiz_master/repository"
 	"strconv"
 	"strings"
 
@@ -14,19 +13,11 @@ import (
 	ntw "moul.io/number-to-words"
 )
 
-type QuestionUsecase interface {
-	Store(args []string) error
-	GetAll() ([]*domain.Question, error)
-	GetByNumber(number string) (domain.Question, error)
-	AnswerQuestion(args []string) error
-	Destroy(number string) error
-}
-
 type questionUsecase struct {
-	questionRepository repository.QuestionRepository
+	questionRepository domain.QuestionRepository
 }
 
-func NewQuestionUsecase(repo repository.QuestionRepository) QuestionUsecase {
+func NewQuestionUsecase(repo domain.QuestionRepository) domain.QuestionUsecase {
 	return &questionUsecase{repo}
 }
 
