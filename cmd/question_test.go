@@ -20,7 +20,7 @@ func TestQuestion_Success(t *testing.T) {
 		builder.SetQuestion("lorem ipsum dolor?"),
 		builder.SetAnswer("2"),
 	)
-	mockQuestionUsecase.On("GetByNumber", mock.Anything).Return(mockQuestion, nil).Once()
+	mockQuestionUsecase.On("GetByNumber", mock.Anything).Return(*mockQuestion, nil).Once()
 
 	cmd := NewQuestionCmd(mockQuestionUsecase)
 	b := bytes.NewBufferString("")
@@ -31,12 +31,12 @@ func TestQuestion_Success(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, string(out), "Q : "+mockQuestion.Question+"\nA : "+mockQuestion.Answer)
+	assert.Equal(t, string(out), "Q : "+mockQuestion.Question+"\nA : "+mockQuestion.Answer+"\n")
 }
 
 func TestQuestion_Fail(t *testing.T) {
 	mockQuestionUsecase := new(mocks.QuestionUsecase)
-	mockQuestionUsecase.On("GetByNumber", mock.Anything).Return(&domain.Question{}, fmt.Errorf("some error")).Once()
+	mockQuestionUsecase.On("GetByNumber", mock.Anything).Return(domain.Question{}, fmt.Errorf("some error")).Once()
 
 	cmd := NewQuestionCmd(mockQuestionUsecase)
 	b := bytes.NewBufferString("")
@@ -47,7 +47,7 @@ func TestQuestion_Fail(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, string(out), "some error")
+	assert.Equal(t, string(out), "some error\n")
 }
 
 func TestAnswerQuestion_Success(t *testing.T) {
@@ -63,7 +63,7 @@ func TestAnswerQuestion_Success(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, string(out), "Correct!")
+	assert.Equal(t, string(out), "Correct!\n")
 }
 
 func TestAnswerQuestion_Fail(t *testing.T) {
@@ -79,7 +79,7 @@ func TestAnswerQuestion_Fail(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, string(out), "Wrong Answer!")
+	assert.Equal(t, string(out), "Wrong Answer!\n")
 }
 
 func TestCreateQuestion_Success(t *testing.T) {
@@ -119,7 +119,7 @@ func TestCreateQuestion_Fail(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, string(out), "some error")
+	assert.Equal(t, string(out), "some error\n")
 }
 
 func TestDeleteQuestion_Success(t *testing.T) {
@@ -149,7 +149,7 @@ func TestDeleteQuestion_Fail(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, string(out), "some error")
+	assert.Equal(t, string(out), "some error\n")
 }
 
 func TestListQuestion_Success(t *testing.T) {
@@ -178,5 +178,5 @@ func TestListQuestion_Fail(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, string(out), "some error")
+	assert.Equal(t, string(out), "some error\n")
 }
