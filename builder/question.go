@@ -1,7 +1,7 @@
 package builder
 
 import (
-	"qtest/domain"
+	"quiz_master/domain"
 )
 
 type Option func(*domain.Question)
