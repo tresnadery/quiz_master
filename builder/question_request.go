@@ -1,7 +1,7 @@
 package builder
 
 import (
-	"qtest/dto"
+	"quiz_master/dto"
 )
 
 type OptionRequestGetOrDelete func(*dto.RequestGetOrDeleteQuestion)
