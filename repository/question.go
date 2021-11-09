@@ -11,7 +11,7 @@ import (
 type QuestionRepository interface {
 	GetAll() ([]*domain.Question, error)
 	Store(question *domain.Question) error
-	GetByNumber(number string) (*domain.Question, error)
+	GetByNumber(number string) (domain.Question, error)
 	Destroy(number string) error
 }
 
@@ -61,23 +61,23 @@ func (r *questionRepository) Store(question *domain.Question) error {
 	return nil
 }
 
-func (r *questionRepository) GetByNumber(number string) (*domain.Question, error) {
+func (r *questionRepository) GetByNumber(number string) (domain.Question, error) {
 	q := domain.Question{}
 	stmt, err := r.conn.Prepare("SELECT id,number,question,answer FROM questions WHERE number = ?")
 	if err != nil {
-		return nil, err
+		return q, err
 	}
 	defer stmt.Close()
 	err = stmt.QueryRow(number).Scan(&q.ID, &q.Number, &q.Question, &q.Answer)
 	if err != nil && err != sql.ErrNoRows {
-		return nil, err
+		return q, err
 	}
 
 	if err == sql.ErrNoRows {
-		return nil, fmt.Errorf("Question not found")
+		return q, fmt.Errorf("Question not found")
 	}
 
-	return &q, nil
+	return q, nil
 }
 
 func (r *questionRepository) Destroy(number string) error {
