@@ -58,7 +58,7 @@ func TestStore_FailAnswerValidation(t *testing.T) {
 func TestStore_FailQuestionAlreadyExisted(t *testing.T) {
 	mockQuestionRepo := new(mocks.QuestionRepository)
 	t.Run("error-failed", func(t *testing.T) {
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(&domain.Question{ID: 1}, fmt.Errorf("Question no 1 already existed!")).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(domain.Question{ID: 1}, fmt.Errorf("Question no 1 already existed!")).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		err := u.Store([]string{"1", "lorem ipsum", "1"})
 		assert.Error(t, err)
@@ -70,7 +70,7 @@ func TestStore_FailQuestionAlreadyExisted(t *testing.T) {
 func TestStore_Success(t *testing.T) {
 	mockQuestionRepo := new(mocks.QuestionRepository)
 	t.Run("success", func(t *testing.T) {
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(&domain.Question{ID: 0}, nil).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(domain.Question{}, nil).Once()
 		mockQuestionRepo.On("Store", mock.AnythingOfType("*domain.Question")).Return(nil).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		err := u.Store([]string{"1", "lorem ipsum", "1"})
@@ -88,11 +88,11 @@ func TestGetByNumber_Success(t *testing.T) {
 			builder.SetAnswer("2"),
 		)
 		mockQuestion.ID = 1
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(mockQuestion, nil).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(*mockQuestion, nil).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		question, err := u.GetByNumber("1")
 		assert.NoError(t, err)
-		assert.Equal(t, question, mockQuestion)
+		assert.Equal(t, question, *mockQuestion)
 		mockQuestionRepo.AssertExpectations(t)
 	})
 }
@@ -100,7 +100,7 @@ func TestGetByNumber_Success(t *testing.T) {
 func TestAnswerQuestion_FailQuestionNotFound(t *testing.T) {
 	mockQuestionRepo := new(mocks.QuestionRepository)
 	t.Run("success", func(t *testing.T) {
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(&domain.Question{}, sql.ErrNoRows).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(domain.Question{}, sql.ErrNoRows).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		err := u.AnswerQuestion([]string{"1", "1"})
 		assert.Error(t, err)
@@ -117,7 +117,7 @@ func TestAnswerQuestion_FailAnswerIsWrong(t *testing.T) {
 			builder.SetQuestion("lorem ipsum dolor?"),
 			builder.SetAnswer("2"),
 		)
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(mockQuestion, nil).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(*mockQuestion, nil).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		err := u.AnswerQuestion([]string{"1", "3"})
 		assert.Error(t, err)
@@ -135,7 +135,7 @@ func TestAnswerQuestion_Success(t *testing.T) {
 			builder.SetQuestion("lorem ipsum dolor?"),
 			builder.SetAnswer("2"),
 		)
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(mockQuestion, nil).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(*mockQuestion, nil).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		err := u.AnswerQuestion([]string{"1", "2"})
 		assert.NoError(t, err)
@@ -152,7 +152,7 @@ func TestAnswerQuestion_SuccessWithWordAnswer(t *testing.T) {
 			builder.SetQuestion("lorem ipsum dolor?"),
 			builder.SetAnswer("2"),
 		)
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(mockQuestion, nil).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(*mockQuestion, nil).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		err := u.AnswerQuestion([]string{"1", "Two"})
 		assert.NoError(t, err)
@@ -164,7 +164,7 @@ func TestAnswerQuestion_SuccessWithWordAnswer(t *testing.T) {
 func TestDestroyQuestion_FailQuestionNotFound(t *testing.T) {
 	mockQuestionRepo := new(mocks.QuestionRepository)
 	t.Run("success", func(t *testing.T) {
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(&domain.Question{}, fmt.Errorf("Question not found")).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(domain.Question{}, fmt.Errorf("Question not found")).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		err := u.Destroy("1")
 		assert.Error(t, err)
@@ -182,7 +182,7 @@ func TestDestroyQuestion_Success(t *testing.T) {
 			builder.SetAnswer("2"),
 		)
 		mockQuestion.ID = 1
-		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(mockQuestion, nil).Once()
+		mockQuestionRepo.On("GetByNumber", mock.Anything).Return(*mockQuestion, nil).Once()
 		mockQuestionRepo.On("Destroy", mock.Anything).Return(nil).Once()
 		u := NewQuestionUsecase(mockQuestionRepo)
 		err := u.Destroy("1")
