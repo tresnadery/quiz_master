@@ -18,5 +18,6 @@ package main
 import "quiz_master/cmd"
 
 func main() {
+	cmd.InitCmd()
 	cmd.Execute()
 }
