@@ -1,15 +1,15 @@
 #!/bin/sh
 #load env
-if [ -f ../.env ]
+if [ -f .env ]
 then
-  export $(cat ../.env | sed 's/#.*//g' | xargs)
+  export $(cat .env | sed 's/#.*//g' | xargs)
 fi
 
-cd ..
+
 # run gomod
 go mod init
 
-#run go mod tidy
+# run go mod tidy
 go mod tidy
 
 # run repository test
